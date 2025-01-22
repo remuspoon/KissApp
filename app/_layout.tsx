@@ -1,39 +1,51 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { SplashScreen, Stack, useRouter } from "expo-router";
+import "../global.css";
+import { useFonts } from "expo-font";
+import { useEffect, useState } from "react";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  const [fontsLoaded, fontsError] = useFonts({
+    "Fredoka-Bold": require("../assets/fonts/Fredoka-Bold.ttf"),
+    "Fredoka-Light": require("../assets/fonts/Fredoka-Light.ttf"),
+    "Fredoka-Medium": require("../assets/fonts/Fredoka-Medium.ttf"),
+    "Fredoka-Regular": require("../assets/fonts/Fredoka-Regular.ttf"),
+    "Fredoka-SemiBold": require("../assets/fonts/Fredoka-SemiBold.ttf"),
   });
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    if (loaded) {
+    if (fontsError) throw fontsError;
+    if (fontsLoaded) {
       SplashScreen.hideAsync();
+      //Simulate auth check with timeout
+      setTimeout(() => {
+        setIsLoading(false);
+        router.replace("/(auth)/login");
+      }, 4000);
     }
-  }, [loaded]);
+  }, [fontsLoaded, fontsError]);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!fontsLoaded && !fontsError) return null;
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack>
+      <Stack.Screen 
+        name="index" 
+        options={{ headerShown: false }} 
+        initialParams={{ isLoading }} 
+      />
+      <Stack.Screen 
+        name="(auth)" 
+        options={{ headerShown: false }} 
+      />
+      <Stack.Screen 
+        name="[...user]" 
+        options={{ headerShown: false }} 
+      />
+    </Stack>
   );
 }
