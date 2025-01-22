@@ -7,6 +7,7 @@ import SignupForm from './SignupForm'
 
 const Login = () => {
   const [activeTab, setActiveTab] = useState('login')
+  const [showLogin, setShowLogin] = useState(true)
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -16,13 +17,18 @@ const Login = () => {
           <Heart size={100} fill="white" color="white" />
           <Text className="text-white text-6xl font-f600 text-center">Welcome to Kiss</Text>
         </View>
-        <Toggle activeTab={activeTab} setActiveTab={setActiveTab} />
-        {activeTab === 'login' ? <LoginForm /> : <SignupForm />}
-        <View className="flex-row items-center mt-4">
+        {showLogin && <Toggle activeTab={activeTab} setActiveTab={setActiveTab} />}
+        {activeTab === 'login' ? 
+          <LoginForm /> : 
+          <SignupForm setShowLogin={setShowLogin} />
+        }
+        {showLogin && (
+          <View className="flex-row items-center mt-4">
             <View className="flex-1 h-[1px] bg-white" />
-                <Text className="text-darkGrey mx-4 font-f400">Or login with</Text>
+            <Text className="text-darkGrey mx-4 font-f400">Or login with</Text>
             <View className="flex-1 h-[1px] bg-white" />
-        </View>        
+          </View>        
+        )}
       </View>
      </ScrollView>
     </SafeAreaView>

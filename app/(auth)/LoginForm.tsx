@@ -1,6 +1,6 @@
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { useState } from 'react'
-import { FIREBASE_AUTH } from '@/firebaseConfig'
+import { FIREBASE_AUTH } from '@/firebase.config'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'expo-router'
 
