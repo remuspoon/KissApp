@@ -1,11 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
-type UserData = {
+
+export type UserData = {
   name: string;
   birthday: string;
   gender: string;
-  profilePicture: string | null;
+  profilePicture: string;
   email: string;
   password: string;
 }
@@ -16,8 +17,8 @@ const SignupForm = () => {
   const [userData, setUserData] = useState<UserData>({
     name: '',
     birthday: '',
-    gender: '',
-    profilePicture: '',
+    gender: 'man',
+    profilePicture: require('../../assets/icons/blankProfile.png'),
     email: '',
     password: ''
   })
@@ -132,7 +133,17 @@ const SignupForm = () => {
             }`}
             disabled={!!errors.email || !!errors.password || !!errors.confirmPassword || !userData.email || !userData.password || !confirmPassword}
             onPress={() => {
-              router.push('/(auth)/onBoarding')
+              router.push({
+                pathname: '/(auth)/onBoarding',
+                params: {
+                  email: userData.email,
+                  password: userData.password,
+                  name: userData.name,
+                  birthday: userData.birthday,
+                  gender: userData.gender,
+                  profilePicture: userData.profilePicture
+                }
+              })
             }}
             >
             <View className="h-[28px] justify-center">

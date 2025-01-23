@@ -25,7 +25,7 @@ export default function RootLayout() {
       setTimeout(() => {
         setIsLoading(false);
         router.replace("/(auth)/login");
-      }, 4000);
+      }, 1000);
     }
   }, [fontsLoaded, fontsError]);
 
