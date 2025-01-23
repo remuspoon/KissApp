@@ -43,10 +43,6 @@ export default function RootLayout() {
         options={{ headerShown: false }} 
       />
       <Stack.Screen 
-        name="(onBoarding)" 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
         name="[...user]" 
         options={{ headerShown: false }} 
       />
