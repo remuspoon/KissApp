@@ -196,7 +196,7 @@ const onBoarding = () => {
                 profilePicture: profileImageUrl || 'default' // Store URL or 'default' string
             })
 
-            router.replace("/[...user]/(home)/homePage")
+            router.replace("/[user]/homePage")
         } catch (error: any) {
             setError(error.message)
             alert('Error creating user: ' + error.message + ' Please try again.')

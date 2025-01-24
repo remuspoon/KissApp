@@ -42,7 +42,7 @@ export default function RootLayout() {
         options={{ headerShown: false }} 
       />
       <Stack.Screen 
-        name="[...user]" 
+        name="[user]" 
         options={{ headerShown: false }} 
       />
     </Stack>

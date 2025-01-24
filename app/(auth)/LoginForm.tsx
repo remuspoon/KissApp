@@ -16,7 +16,7 @@ const LoginForm = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password)
       console.log(response)
-      router.replace("/[...user]/(home)/homePage")
+      router.replace("/[user]/homePage")
     } catch (error: any) {
         console.log(error)
         alert('Login failed: ' + error.message)
