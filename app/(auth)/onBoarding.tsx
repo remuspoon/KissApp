@@ -161,8 +161,8 @@ const onBoarding = () => {
                                 ? { uri: userData.profilePicture }
                                 : userData.profilePicture}
                         />
-                        <View className="absolute bottom-0 w-full bg-white py-1">
-                            <Text className="text-accent text-center font-f600 pb-4">Upload Photo</Text>
+                        <View className="absolute bottom-0 w-full bg-white py-2">
+                            <Text className="text-accent text-center font-f600 pb-3">Upload Photo</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity className={`w-full bg-white rounded-xl p-4`}
