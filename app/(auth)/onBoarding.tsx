@@ -16,11 +16,12 @@ const onBoarding = () => {
     const params = useLocalSearchParams();
     const [userData, setUserData] = React.useState<UserData>({
       name: (params.name as string) || '',
-      birthday: (params.birthday as string) || '',
+      birthday: new Date().toISOString().split('T')[0],
       gender: (params.gender as string) || '',
       profilePicture: '',  
       email: (params.email as string) || '',
-      password: (params.password as string) || ''
+      password: (params.password as string) || '',
+      id: (params.id as string) || ''
     });
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState('')
@@ -167,9 +168,14 @@ const onBoarding = () => {
     const createUser = async () => {
         setLoading(true)
         try {
+            const cleanName = userData.name.replace(/\s+/g, '');
+            const randomString = Math.random().toString(36).substring(2, 7);
+            const newId = `${cleanName}#${randomString}`;
+            
             const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password)
             const user = userCredential.user
             let profileImageUrl = ''
+
             if (typeof userData.profilePicture === 'string' && userData.profilePicture.startsWith('file')) {
                 try {
                     const storageRef = ref(storage, `profilePictures/${user.uid}.jpg`)
@@ -187,13 +193,13 @@ const onBoarding = () => {
                 }
             }
 
-            // Create user document in Firestore
             await setDoc(doc(db, 'users', user.uid), {
                 name: userData.name,
                 birthday: userData.birthday,
                 gender: userData.gender,
                 email: userData.email,
-                profilePicture: profileImageUrl || 'default' // Store URL or 'default' string
+                profilePicture: profileImageUrl || 'default',
+                id: newId
             })
 
             router.replace("/[user]/homePage")
@@ -203,6 +209,7 @@ const onBoarding = () => {
             router.replace("/(auth)/login")
         } finally {
             setLoading(false)
+            console.log(userData)
         }
     }
   return (

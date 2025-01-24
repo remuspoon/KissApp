@@ -9,6 +9,7 @@ export type UserData = {
   profilePicture: string;
   email: string;
   password: string;
+  id: string;
 }
 
 const SignupForm = () => {
@@ -20,7 +21,8 @@ const SignupForm = () => {
     gender: 'man',
     profilePicture: '',
     email: '',
-    password: ''
+    password: '',
+    id: ''
   })
   const [errors, setErrors] = useState({
     email: '',
@@ -141,7 +143,8 @@ const SignupForm = () => {
                   name: userData.name,
                   birthday: userData.birthday,
                   gender: userData.gender,
-                  profilePicture: userData.profilePicture
+                  profilePicture: userData.profilePicture,
+                  id: userData.id
                 }
               })
             }}
