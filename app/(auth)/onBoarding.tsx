@@ -149,14 +149,21 @@ const onBoarding = () => {
             return (
                 <View className="flex-1 items-center gap-y-8 w-full">
                     <Heart size={100} fill="white" color="white" />
-                    <Text className="text-white text-6xl font-f600 text-center">Upload a profile picture</Text>
-                    <TouchableOpacity className="flex items-center bg-white rounded-full p-2" onPress={pickImage}>
+                    <Text className="text-white text-6xl font-f600 text-center">Upload your picture</Text>
+                    <TouchableOpacity 
+                        className="flex items-center justify-center bg-white rounded-full p-2 overflow-hidden relative" 
+                        onPress={pickImage} 
+                        disabled={loading}
+                    >
                         <Image 
-                            className="w-[200px] h-[200px] rounded-full" 
+                            className="w-40 h-40 rounded-full" 
                             source={typeof userData.profilePicture === 'string' 
                                 ? { uri: userData.profilePicture }
                                 : userData.profilePicture}
                         />
+                        <View className="absolute bottom-0 w-full bg-white py-1">
+                            <Text className="text-accent text-center font-f600 pb-4">Upload Photo</Text>
+                        </View>
                     </TouchableOpacity>
                     <TouchableOpacity className={`w-full bg-white rounded-xl p-4`}
                         onPress={() => {
