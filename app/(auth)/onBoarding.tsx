@@ -10,10 +10,11 @@ import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_STORAGE } from '@/firebase.config'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-
+import { UserContext } from '../[user]/userContext'
 
 const onBoarding = () => {
     const params = useLocalSearchParams();
+    const { fetchUserData } = React.useContext(UserContext)
     const [userData, setUserData] = React.useState<UserData>({
       name: (params.name as string) || '',
       birthday: new Date().toISOString().split('T')[0],
@@ -68,6 +69,7 @@ const onBoarding = () => {
                     <TextInput
                         className="w-full h-12 bg-white rounded-xl p-4"
                         placeholder="Name"
+                        placeholderTextColor="#6C7278"
                         value={userData.name}
                         onChangeText={(text: string) => setUserData({ ...userData, name: text })}
                     />
@@ -89,6 +91,7 @@ const onBoarding = () => {
                     <Text className="text-white text-6xl font-f600 text-center">What is your birthday?</Text>
                     <View className="w-full bg-white rounded-xl p-2">
                         <DateTimePicker
+                        textColor="black"
                         value={userData.birthday ? new Date(userData.birthday) : new Date()}
                         maximumDate={new Date()}
                         minimumDate={new Date(1900, 0, 1)}
@@ -122,6 +125,7 @@ const onBoarding = () => {
                     <Text className="text-white text-6xl font-f600 text-center">What is your gender?</Text>
                     <View className="w-full bg-white rounded-xl">
                         <Picker
+                            itemStyle={{ color: 'black' }}
                             selectedValue={userData.gender}
                             onValueChange={(itemValue) => setUserData({ ...userData, gender: itemValue })}
                         >
@@ -159,7 +163,7 @@ const onBoarding = () => {
                             createUser()
                         }}
                     >
-                        {loading ? <ActivityIndicator size="small" color="#0000ff" /> : <Text className="text-accent text-center font-f600">Create Account</Text>}
+                        {loading ? <ActivityIndicator size="small" color="#ED40C5" /> : <Text className="text-accent text-center font-f600">Create Account</Text>}
                     </TouchableOpacity>
                 </View> 
             )
@@ -178,7 +182,7 @@ const onBoarding = () => {
 
             if (typeof userData.profilePicture === 'string' && userData.profilePicture.startsWith('file')) {
                 try {
-                    const storageRef = ref(storage, `profilePictures/${user.uid}.jpg`)
+                    const storageRef = ref(storage, `profilePictures/${user.uid}`)
                     const response = await fetch(userData.profilePicture)
                     if (!response.ok) throw new Error('Failed to fetch image')
                     
@@ -187,10 +191,14 @@ const onBoarding = () => {
                     
                     await uploadBytes(storageRef, blob)
                     profileImageUrl = await getDownloadURL(storageRef)
+                    console.log("Upload successful, URL:", profileImageUrl)
                 } catch (uploadError) {
-                    console.log('Upload error:', uploadError)
+                    console.error('Upload error:', uploadError)
                     profileImageUrl = 'default'
                 }
+            } else {
+                console.log("No valid image to upload, using default")
+                profileImageUrl = 'default'
             }
 
             await setDoc(doc(db, 'users', user.uid), {
@@ -198,10 +206,10 @@ const onBoarding = () => {
                 birthday: userData.birthday,
                 gender: userData.gender,
                 email: userData.email,
-                profilePicture: profileImageUrl || 'default',
+                profilePicture: profileImageUrl,
                 id: newId
             })
-
+            await fetchUserData()
             router.replace("/[user]/homePage")
         } catch (error: any) {
             setError(error.message)
@@ -209,7 +217,7 @@ const onBoarding = () => {
             router.replace("/(auth)/login")
         } finally {
             setLoading(false)
-            console.log(userData)
+            console.log("Final userData:", userData)
         }
     }
   return (

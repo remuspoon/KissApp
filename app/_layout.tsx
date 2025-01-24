@@ -2,6 +2,7 @@ import { SplashScreen, Stack, useRouter } from "expo-router";
 import "../global.css";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
+import { UserContextProvider } from "./[user]/userContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -31,20 +32,22 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontsError) return null;
 
   return (
-    <Stack>
-      <Stack.Screen 
-        name="index" 
-        options={{ headerShown: false }} 
-        initialParams={{ isLoading }} 
-      />
-      <Stack.Screen 
-        name="(auth)" 
-        options={{ headerShown: false }} 
-      />
-      <Stack.Screen 
-        name="[user]" 
-        options={{ headerShown: false }} 
-      />
-    </Stack>
+    <UserContextProvider>
+      <Stack>
+        <Stack.Screen 
+          name="index" 
+          options={{ headerShown: false }} 
+          initialParams={{ isLoading }} 
+        />
+        <Stack.Screen 
+          name="(auth)" 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="[user]" 
+          options={{ headerShown: false }} 
+        />
+      </Stack>
+    </UserContextProvider>
   );
 }

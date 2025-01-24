@@ -1,8 +1,9 @@
 import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { FIREBASE_AUTH } from '@/firebase.config'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'expo-router'
+import { UserContext } from '../[user]/userContext'
 
 const LoginForm = () => {
   const [email, setEmail] = useState('')
@@ -10,12 +11,14 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false)
   const auth = FIREBASE_AUTH
   const router = useRouter()
+  const { fetchUserData } = useContext(UserContext)
 
   const SignIn = async () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password)
       console.log(response)
+      await fetchUserData()
       router.replace("/[user]/homePage")
     } catch (error: any) {
         console.log(error)
