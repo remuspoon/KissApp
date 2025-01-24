@@ -18,7 +18,7 @@ const SignupForm = () => {
     name: '',
     birthday: '',
     gender: 'man',
-    profilePicture: require('../../assets/icons/blankProfile.png'),
+    profilePicture: '',
     email: '',
     password: ''
   })

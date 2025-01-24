@@ -21,7 +21,6 @@ export default function RootLayout() {
     if (fontsError) throw fontsError;
     if (fontsLoaded) {
       SplashScreen.hideAsync();
-      //Simulate auth check with timeout
       setTimeout(() => {
         setIsLoading(false);
         router.replace("/(auth)/login");

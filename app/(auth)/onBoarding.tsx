@@ -1,11 +1,16 @@
-import { View, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Modal } from 'react-native'
+import { View, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
 import React from 'react'
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { UserData } from './SignupForm';
 import { Heart } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
+import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_STORAGE } from '@/firebase.config';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
 
 const onBoarding = () => {
     const params = useLocalSearchParams();
@@ -13,25 +18,44 @@ const onBoarding = () => {
       name: (params.name as string) || '',
       birthday: (params.birthday as string) || '',
       gender: (params.gender as string) || '',
-      profilePicture: (params.profilePicture as string) || '',
+      profilePicture: '',  
       email: (params.email as string) || '',
       password: (params.password as string) || ''
     });
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState('')
+    const auth = FIREBASE_AUTH
+    const db = FIREBASE_DB
+    const storage = FIREBASE_STORAGE
+
+    React.useEffect(() => {
+      setUserData(prev => ({
+        ...prev,
+        profilePicture: require('../../assets/icons/blankProfile.png')
+      }));
+    }, []);
+
     const [step, setStep] = React.useState(0)
-    const formValidation = (step: number) => {
-        switch (step) {
-            case 0:
-                if (userData.name.trim() === '') {
-                    return false
-                }
-                return true
-            case 1:
-                return true
-            case 2:
-                return true
-            case 3:
-                return true
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [1,1],
+            quality: 1
+        })
+        console.log(userData)
+        if (!result.canceled) {
+            setUserData(prev => ({
+                ...prev,
+                profilePicture: result.assets[0].uri
+            }))
         }
+    }
+    const formValidation = () => {
+        if (userData.name.trim() === '') {
+            return false
+        }
+        return true
     }
     const renderStep = (step: number) => {
         switch (step) {
@@ -47,12 +71,10 @@ const onBoarding = () => {
                         onChangeText={(text: string) => setUserData({ ...userData, name: text })}
                     />
                     <TouchableOpacity 
-                        className={`w-full bg-white rounded-xl p-4 ${formValidation(step) ? 'opacity-100' : 'opacity-50'}`}
-                        disabled={!formValidation(step)}
+                        className={`w-full bg-white rounded-xl p-4 ${formValidation() ? 'opacity-100' : 'opacity-50'}`}
+                        disabled={!formValidation()}
                         onPress={() => {
-                            if (formValidation(step)) {
-                                setStep(step + 1)
-                            }
+                            setStep(step + 1)
                         }}
                     >
                         <Text className="text-accent text-center font-f600">Next</Text>
@@ -82,13 +104,10 @@ const onBoarding = () => {
                         />
                     </View>
                     <TouchableOpacity 
-                        className={`w-full bg-white rounded-xl p-4 ${formValidation(step) ? 'opacity-100' : 'opacity-50'}`}
-                        disabled={!formValidation(step)}
+                        className={`w-full bg-white rounded-xl p-4`}
                         onPress={() => {
-                            if (formValidation(step)) {
-                                setStep(step + 1)
-                                console.log(userData)
-                            }
+                            setStep(step + 1)
+                            console.log(userData)
                         }}
                     >
                         <Text className="text-accent text-center font-f600">Next</Text>
@@ -112,13 +131,9 @@ const onBoarding = () => {
                         </Picker>
                     </View>
                     <TouchableOpacity 
-                        className={`w-full bg-white rounded-xl p-4 ${formValidation(step) ? 'opacity-100' : 'opacity-50'}`}
-                        disabled={!formValidation(step)}
+                        className={`w-full bg-white rounded-xl p-4`}
                         onPress={() => {
-                            if (formValidation(step)) {
-                                setStep(step + 1)
-                                console.log(userData)
-                            }
+                            setStep(step + 1)
                         }}
                     >
                         <Text className="text-accent text-center font-f600">Next</Text>
@@ -127,14 +142,69 @@ const onBoarding = () => {
             )
         case 3:
             return (
-                <View className="flex items-center gap-y-8">
+                <View className="flex-1 items-center gap-y-8 w-full">
                     <Heart size={100} fill="white" color="white" />
                     <Text className="text-white text-6xl font-f600 text-center">Upload a profile picture</Text>
+                    <TouchableOpacity className="flex items-center bg-white rounded-full p-2" onPress={pickImage}>
+                        <Image 
+                            className="w-[200px] h-[200px] rounded-full" 
+                            source={typeof userData.profilePicture === 'string' 
+                                ? { uri: userData.profilePicture }
+                                : userData.profilePicture}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity className={`w-full bg-white rounded-xl p-4`}
+                        onPress={() => {
+                            createUser()
+                        }}
+                    >
+                        {loading ? <ActivityIndicator size="small" color="#0000ff" /> : <Text className="text-accent text-center font-f600">Create Account</Text>}
+                    </TouchableOpacity>
                 </View> 
             )
         }
     }
+    const createUser = async () => {
+        setLoading(true)
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password)
+            const user = userCredential.user
+            let profileImageUrl = ''
+            if (typeof userData.profilePicture === 'string' && userData.profilePicture.startsWith('file')) {
+                try {
+                    const storageRef = ref(storage, `profilePictures/${user.uid}.jpg`)
+                    const response = await fetch(userData.profilePicture)
+                    if (!response.ok) throw new Error('Failed to fetch image')
+                    
+                    const blob = await response.blob()
+                    console.log('Blob size:', blob.size)
+                    
+                    await uploadBytes(storageRef, blob)
+                    profileImageUrl = await getDownloadURL(storageRef)
+                } catch (uploadError) {
+                    console.log('Upload error:', uploadError)
+                    profileImageUrl = 'default'
+                }
+            }
 
+            // Create user document in Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                name: userData.name,
+                birthday: userData.birthday,
+                gender: userData.gender,
+                email: userData.email,
+                profilePicture: profileImageUrl || 'default' // Store URL or 'default' string
+            })
+
+            router.replace("/[...user]/(home)/homePage")
+        } catch (error: any) {
+            setError(error.message)
+            alert('Error creating user: ' + error.message + ' Please try again.')
+            router.replace("/(auth)/login")
+        } finally {
+            setLoading(false)
+        }
+    }
   return (
     <SafeAreaView className="bg-primary h-full">
     <ScrollView contentContainerStyle={{ height: "100%" }}>
