@@ -25,7 +25,7 @@ const HomePage = () => {
           className="w-2/3 aspect-square rounded-full bg-white items-center justify-center"
           activeOpacity={.5}>
             <View className="pt-6">
-              <Heart size={170} fill="#FF6C6E" color="#FF6C6E" />
+              <Heart size={150} fill="#FF6C6E" color="#FF6C6E" />
             </View>
           </TouchableOpacity>
         <View className="flex-col items-center justify-center gap-y-2">

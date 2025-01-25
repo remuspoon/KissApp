@@ -4,6 +4,7 @@ import { router } from 'expo-router'
 import { UserContext } from '../userContext'
 import { signOut } from 'firebase/auth'
 import { FIREBASE_AUTH } from '@/firebase.config'
+import { Settings, ArrowLeft } from 'lucide-react-native'
 
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
@@ -14,10 +15,16 @@ const ProfilePage = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-secondary">
-      <View className="flex-row justify-start items-center px-5">
+      <View className="flex-row justify-between items-center px-8">
         <TouchableOpacity
+          className="bg-white rounded-full p-2"
           onPress={() => router.back()}>
-          <Text>Back</Text>
+          <ArrowLeft size={30} color="#FFA1E7" fill="transparent" />
+        </TouchableOpacity>
+        <TouchableOpacity
+          className="bg-white rounded-full p-2"
+          onPress={() => router.push('/(profile)/settingsPage')}>
+          <Settings size={30} color="#FFA1E7" fill="transparent" />
         </TouchableOpacity>
       </View>
       <View className="flex-1 bg-secondary  justify-center px-5">
