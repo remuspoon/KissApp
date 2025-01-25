@@ -4,7 +4,7 @@ import { FIREBASE_DB } from '@/firebase.config'
 import { doc, getDoc } from 'firebase/firestore'
 
 // Define the interface for user data
-interface UserContextType {
+export interface UserContextType {
     name: string;
     birthday: string;
     gender: string;
