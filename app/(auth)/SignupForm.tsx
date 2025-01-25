@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router'
 
-export type UserData = {
+export interface UserData {
   name: string;
   birthday: string;
   gender: string;

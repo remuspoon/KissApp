@@ -3,8 +3,8 @@ import { FIREBASE_AUTH } from '@/firebase.config'
 import { FIREBASE_DB } from '@/firebase.config'
 import { doc, getDoc } from 'firebase/firestore'
 
-// Define the type for user data
-type UserContextType = {
+// Define the interface for user data
+interface UserContextType {
     name: string;
     birthday: string;
     gender: string;
