@@ -1,12 +1,15 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect } from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
 import { signOut } from 'firebase/auth'
 import { FIREBASE_AUTH } from '@/firebase.config'
-import { Settings, ArrowLeft } from 'lucide-react-native'
+import { Settings, ArrowLeft, Search } from 'lucide-react-native'
 import { Image } from 'expo-image'
 import Placeholder from '@/assets/icons/blankProfile.png'
+import FriendCard from './friendCard'
+
+
 
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
@@ -14,6 +17,7 @@ const ProfilePage = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-secondary">
+      <ScrollView>
       <View className="flex-row justify-between items-center px-8">
         <TouchableOpacity
           className="bg-white rounded-full p-2"
@@ -42,9 +46,14 @@ const ProfilePage = () => {
           </View>
         </View>
         <View>
-          <Text className="text-grey text-2xl font-f200 py-5">Friend</Text>
-          <View className="flex-row bg-white gap-x-5">
-            <Text>Friend</Text>
+          <Text className="text-darkGrey text-2xl font-f200 py-5">Friend</Text>
+          <View className="gap-y-5">
+            <FriendCard />
+            {/* Search Bar */}
+            <View className="flex-row w-full items-center bg-white rounded-2xl p-5 gap-x-5">
+              <Search size={30} color="#6c7278" fill="transparent" />
+              <Text className="text-darkGrey text-2xl font-f400">Find your friend</Text>
+            </View>
           </View>
         </View>
         
@@ -62,6 +71,7 @@ const ProfilePage = () => {
           <Text className="text-white text-center font-f600">Logout</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
