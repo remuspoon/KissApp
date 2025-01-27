@@ -10,6 +10,8 @@ export interface UserData {
   email: string;
   password: string;
   id: string;
+  friends: string[];
+  friendRequests: string[];
 }
 
 const SignupForm = () => {
@@ -22,7 +24,9 @@ const SignupForm = () => {
     profilePicture: '',
     email: '',
     password: '',
-    id: ''
+    id: '',
+    friends: [],
+    friendRequests: []
   })
   const [errors, setErrors] = useState({
     email: '',
@@ -144,7 +148,9 @@ const SignupForm = () => {
                   birthday: userData.birthday,
                   gender: userData.gender,
                   profilePicture: userData.profilePicture,
-                  id: userData.id
+                  id: userData.id,
+                  friends: userData.friends,
+                  friendRequests: userData.friendRequests
                 }
               })
             }}

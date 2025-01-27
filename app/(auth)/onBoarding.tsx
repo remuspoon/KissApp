@@ -22,7 +22,9 @@ const onBoarding = () => {
       profilePicture: '',  
       email: (params.email as string) || '',
       password: (params.password as string) || '',
-      id: (params.id as string) || ''
+      id: (params.id as string) || '',
+      friends: [],
+      friendRequests: []
     });
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState('')
@@ -214,7 +216,9 @@ const onBoarding = () => {
                 gender: userData.gender,
                 email: userData.email,
                 profilePicture: profileImageUrl,
-                id: newId
+                id: newId,
+                friends: [],
+                friendRequests: []
             })
             await fetchUserData()
             router.replace("/[user]/homePage")

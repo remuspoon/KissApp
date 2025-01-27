@@ -3,6 +3,11 @@ import { FIREBASE_AUTH } from '@/firebase.config'
 import { FIREBASE_DB } from '@/firebase.config'
 import { doc, getDoc } from 'firebase/firestore'
 
+export interface StatsTrack {
+    id: string;
+    streak: number;
+    kissCount: number;
+}
 // Define the interface for user data
 export interface UserContextType {
     name: string;
@@ -11,6 +16,9 @@ export interface UserContextType {
     profilePicture: string;
     email: string;
     id: string;
+    friends: string[];
+    friendRequests: string[];
+    stats: StatsTrack[];
     fetchUserData: () => Promise<void>;
 }
 
@@ -22,6 +30,9 @@ export const UserContext = createContext<UserContextType>({
     profilePicture: '',
     email: '',
     id: '',
+    friends: [],
+    friendRequests: [],
+    stats: [],
     fetchUserData: async () => {}
 })
 
@@ -34,6 +45,9 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
         profilePicture: '',
         email: '',
         id: '',
+        friends: [],
+        friendRequests: [],
+        stats: [],
         fetchUserData: async () => {}
     });
 
