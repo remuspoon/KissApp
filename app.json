@@ -38,7 +38,8 @@
         {
           "photosPermission": "Allow Kiss You to access your photos"
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true

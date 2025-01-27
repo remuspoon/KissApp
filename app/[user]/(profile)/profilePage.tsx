@@ -1,17 +1,16 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
+import React, { useEffect } from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
 import { signOut } from 'firebase/auth'
 import { FIREBASE_AUTH } from '@/firebase.config'
 import { Settings, ArrowLeft } from 'lucide-react-native'
+import { Image } from 'expo-image'
+import Placeholder from '@/assets/icons/blankProfile.png'
 
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
   const auth = FIREBASE_AUTH
-  const profilePicture = userData.profilePicture === 'default' || !userData.profilePicture
-    ? require('@/assets/icons/blankProfile.png')
-    : { uri: userData.profilePicture }
 
   return (
     <SafeAreaView className="flex-1 bg-secondary">
@@ -30,7 +29,12 @@ const ProfilePage = () => {
       <View className="flex-1 bg-secondary  justify-center px-5">
         <View className="flex items-center gap-y-5">
           <View>
-            <Image source={profilePicture} className="w-60 h-60 rounded-full" />
+            <Image 
+              source={userData.profilePicture}
+              style={{width: 200, height: 200, borderRadius: 100, borderWidth: 4, borderColor: 'white', shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.25, shadowRadius: 4}}
+              contentFit="cover"
+              placeholder={Placeholder}
+            />
           </View>
           <View>
             <Text className="text-primary text-5xl text-center font-f600">{userData.name}</Text>

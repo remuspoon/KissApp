@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Image, TextInput, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
@@ -7,14 +7,12 @@ import { ArrowLeft } from 'lucide-react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { doc, updateDoc } from 'firebase/firestore'
-
+import { Image } from 'expo-image'
+import Placeholder from '@/assets/icons/blankProfile.png'
 const SettingsPage = () => {
   const userData = React.useContext(UserContext)
   const auth = FIREBASE_AUTH
   const [loading, setLoading] = React.useState(false)
-  const profilePicture = userData.profilePicture === 'default' || !userData.profilePicture
-    ? require('@/assets/icons/blankProfile.png')
-    : { uri: userData.profilePicture }
   const [name, setName] = React.useState(userData.name)
   const [id, setId] = React.useState(userData.id)
   const [newProfilePicture, setNewProfilePicture] = React.useState('')
@@ -96,7 +94,7 @@ const SettingsPage = () => {
       <View className="flex-1 bg-secondary px-8">
         <View className="flex items-center gap-y-10">
           <TouchableOpacity onPress={pickImage}>
-            <Image source={displayPicture} className="w-44 h-44 rounded-full" />
+            <Image source={displayPicture} style={{width: 180, height: 180, borderRadius: 90, borderWidth: 4, borderColor: 'white', shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.25, shadowRadius: 4}} placeholder={Placeholder} />
           </TouchableOpacity>
           <View className="flex-row bg-white w-full p-5 rounded-2xl">
             <View className="flex gap-y-5 w-1/2">

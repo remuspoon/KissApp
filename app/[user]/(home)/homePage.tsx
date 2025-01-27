@@ -1,22 +1,29 @@
-import { View, Text, Image, SafeAreaView, TouchableOpacity, Animated } from 'react-native'
-import React, { useContext, useRef } from 'react'
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
+import React, { useContext, useEffect } from 'react'
 import { UserContext } from '../userContext'
 import { Heart } from 'lucide-react-native'
 import { router } from 'expo-router'
+import { Image } from 'expo-image'
+import Placeholder from '@/assets/icons/blankProfile.png'
 
 const HomePage = () => {
   const userData = useContext(UserContext)
-  const profilePicture = userData.profilePicture === 'default' || !userData.profilePicture
-    ? require('@/assets/icons/blankProfile.png')
-    : { uri: userData.profilePicture }
+  useEffect(() => {
+    console.log(userData.profilePicture)
+  }, [])
   
   return (
     <SafeAreaView className="flex-1 bg-secondary">
-      <View className="bg-secondary items-end p-5">
+      <View className="bg-secondary items-end px-5">
         <TouchableOpacity 
           onPress={() => router.push('/(profile)/profilePage')}>
           <View>
-            <Image source={profilePicture} className="w-20 h-20 rounded-full" />
+            <Image 
+              source={userData.profilePicture} 
+              style={{width: 80, height: 80, borderRadius: 40, borderWidth: 4, borderColor: 'white', shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.25, shadowRadius: 4}}
+              contentFit="cover"
+              placeholder={Placeholder}
+            />
           </View>
         </TouchableOpacity>
       </View>
