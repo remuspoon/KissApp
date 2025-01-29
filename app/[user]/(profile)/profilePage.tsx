@@ -50,10 +50,12 @@ const ProfilePage = () => {
           <View className="gap-y-5">
             <FriendCard />
             {/* Search Bar */}
-            <View className="flex-row w-full items-center bg-white rounded-2xl p-5 gap-x-5">
+            <TouchableOpacity
+              onPress={() => router.push('/(profile)/searchPage')}
+              className="flex-row w-full items-center bg-white rounded-2xl p-5 gap-x-5">
               <Search size={30} color="#6c7278" fill="transparent" />
               <Text className="text-darkGrey text-2xl font-f400">Find your friend</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         
