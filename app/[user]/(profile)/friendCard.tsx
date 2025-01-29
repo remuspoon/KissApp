@@ -3,9 +3,8 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import Placeholder from '@/assets/icons/blankProfile.png'
 
-const friendCard = () => {
+const FriendCard = () => {
   return (
-    <>
     <View className="flex-row w-full items-center bg-white justify-between rounded-2xl p-3">
         <View className="flex-row items-center gap-x-5 w-4/5">
             <View className="bg-white rounded-full">
@@ -25,8 +24,7 @@ const friendCard = () => {
             <Text>123 🔥</Text>
         </View>
     </View>
-    </>
     )
 }
 
-export default friendCard
+export default FriendCard
