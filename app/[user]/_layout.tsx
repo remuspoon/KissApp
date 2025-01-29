@@ -7,6 +7,7 @@ export default function UserLayout() {
       <Stack.Screen name="(home)/homePage" options={{ headerShown: false }} />
       <Stack.Screen name="(profile)/profilePage" options={{ headerShown: false }} />
       <Stack.Screen name="(profile)/settingsPage" options={{ headerShown: false }} />
+      <Stack.Screen name="(profile)/searchPage" options={{ headerShown: false }} />
     </Stack>
   )
 }
