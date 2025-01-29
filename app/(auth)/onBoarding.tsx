@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native'
+import { View, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React from 'react'
 import { router, useLocalSearchParams } from 'expo-router';
 import { UserData } from './SignupForm';
@@ -11,7 +11,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { UserContext } from '../[user]/userContext'
-
+import { Image } from 'expo-image'
 const onBoarding = () => {
     const params = useLocalSearchParams();
     const { fetchUserData } = React.useContext(UserContext)
@@ -158,7 +158,7 @@ const onBoarding = () => {
                         disabled={loading}
                     >
                         <Image 
-                            className="w-40 h-40 rounded-full" 
+                            style={{width: 160, height: 160, borderRadius: 80, borderWidth: 4, borderColor: 'white', shadowColor: '#000', shadowOffset: {width: 0, height: 4}, shadowOpacity: 0.25, shadowRadius: 4}}
                             source={typeof userData.profilePicture === 'string' 
                                 ? { uri: userData.profilePicture }
                                 : userData.profilePicture}
@@ -181,7 +181,7 @@ const onBoarding = () => {
     const createUser = async () => {
         setLoading(true)
         try {
-            const cleanName = userData.name.replace(/\s+/g, '');
+            const cleanName = userData.name.toLowerCase().replace(/\s+/g, '');
             const randomString = Math.random().toString(36).substring(2, 7);
             const newId = `${cleanName}#${randomString}`;
             
