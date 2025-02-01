@@ -16,7 +16,8 @@ export interface UserContextType {
     profilePicture: string;
     email: string;
     id: string;
-    friends: string[];
+    friend: string;
+    friendPending: string;
     friendRequests: string[];
     stats: StatsTrack[];
     fetchUserData: () => Promise<void>;
@@ -30,7 +31,8 @@ export const UserContext = createContext<UserContextType>({
     profilePicture: '',
     email: '',
     id: '',
-    friends: [],
+    friend: '',
+    friendPending: '',
     friendRequests: [],
     stats: [],
     fetchUserData: async () => {}
@@ -45,7 +47,8 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
         profilePicture: '',
         email: '',
         id: '',
-        friends: [],
+        friend: '',
+        friendPending: '',
         friendRequests: [],
         stats: [],
         fetchUserData: async () => {}
