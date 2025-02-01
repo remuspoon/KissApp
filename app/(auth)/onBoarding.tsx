@@ -219,7 +219,8 @@ const onBoarding = () => {
                 email: userData.email,
                 profilePicture: profileImageUrl,
                 id: newId,
-                friends: [],
+                friend: '',
+                friendPending: '',
                 friendRequests: []
             })
             await fetchUserData()
