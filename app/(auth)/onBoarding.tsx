@@ -12,6 +12,7 @@ import { doc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { UserContext } from '../[user]/userContext'
 import { Image } from 'expo-image'
+
 const onBoarding = () => {
     const params = useLocalSearchParams();
     const { fetchUserData } = React.useContext(UserContext)
@@ -23,7 +24,8 @@ const onBoarding = () => {
       email: (params.email as string) || '',
       password: (params.password as string) || '',
       id: (params.id as string) || '',
-      friends: [],
+      friend: '',
+      friendPending: '',
       friendRequests: []
     });
     const [loading, setLoading] = React.useState(false)

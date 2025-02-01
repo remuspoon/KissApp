@@ -10,7 +10,8 @@ export interface UserData {
   email: string;
   password: string;
   id: string;
-  friends: string[];
+  friend: string;
+  friendPending: string;
   friendRequests: string[];
 }
 
@@ -25,7 +26,8 @@ const SignupForm = () => {
     email: '',
     password: '',
     id: '',
-    friends: [],
+    friend: '',
+    friendPending: '',
     friendRequests: []
   })
   const [errors, setErrors] = useState({
@@ -149,7 +151,8 @@ const SignupForm = () => {
                   gender: userData.gender,
                   profilePicture: userData.profilePicture,
                   id: userData.id,
-                  friends: userData.friends,
+                  friend: userData.friend,
+                  friendPending: userData.friendPending,
                   friendRequests: userData.friendRequests
                 }
               })
