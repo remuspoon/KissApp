@@ -2,7 +2,7 @@ import { View, Text, ScrollView, SafeAreaView, TextInput, TouchableOpacity, Acti
 import React from 'react'
 import { router, useLocalSearchParams } from 'expo-router';
 import { UserData } from './SignupForm';
-import { Heart } from 'lucide-react-native';
+import { ArrowLeft, Heart } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -237,7 +237,18 @@ const onBoarding = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
     <ScrollView contentContainerStyle={{ height: "100%" }}>
-     <View className="flex-1 items-center p-8 gap-y-8">
+            <View className="flex-row justify-between items-center px-8">
+              {step > 0 && (
+                <TouchableOpacity
+                  onPress={() => setStep(step - 1)}
+                  className="flex-row items-center gap-x-2">
+                  <ArrowLeft size={30} color="#FFFFFF" fill="transparent" />
+                  <Text className="text-white text-lg font-f500">Back</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View className="flex-1 items-center p-8 gap-y-8">
        {renderStep(step)}
      </View>
     </ScrollView>
