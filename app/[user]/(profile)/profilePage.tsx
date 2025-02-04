@@ -1,23 +1,63 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
 import { signOut } from 'firebase/auth'
-import { FIREBASE_AUTH } from '@/firebase.config'
+import { FIREBASE_AUTH, FIREBASE_DB } from '@/firebase.config'
 import { Settings, ArrowLeft, Search } from 'lucide-react-native'
 import { Image } from 'expo-image'
 import Placeholder from '@/assets/icons/blankProfile.png'
-import FriendCard from './friendCard'
-
-
+import FriendCard from './(profile components)/friendCard'
+import FriendRequestCard from './(profile components)/friendRequestCard'
+import SearchCard from './(profile components)/searchCard'
+import FriendPendingCard from './(profile components)/friendPendingCard'
+import { doc, getDoc } from 'firebase/firestore'
 
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
   const auth = FIREBASE_AUTH
+  const [friend, setFriend] = useState<boolean>(
+    Boolean(userData.friend)
+  )
+  const [sentFriendRequest, setSentFriendRequest] = useState<boolean>(
+    Boolean(userData.friendPending)
+  )
+  const [friendRequests, setFriendRequests] = useState<Array<{
+    uid: string;
+    name: string;
+    profilePicture: string;
+    id: string;
+  }>>([])
+
+  useEffect(() => {
+    const fetchFriendRequests = async () => {
+      if (userData.friendRequests.length > 0) {
+        const requests = await Promise.all(
+          userData.friendRequests.map(async (uid) => {
+            const userDoc = await getDoc(doc(FIREBASE_DB, 'users', uid));
+            if (userDoc.exists()) {
+              const data = userDoc.data();
+              return {
+                uid: uid,
+                name: data.name,
+                id: data.id,
+                profilePicture: data.profilePicture
+              };
+            }
+            return null;
+          })
+        );
+        setFriendRequests(requests.filter(request => request !== null));
+      }
+    };
+
+    fetchFriendRequests();
+  }, [userData.friendRequests]);
 
   return (
     <SafeAreaView className="flex-1 bg-secondary">
       <ScrollView>
+      {/* Header */}
       <View className="flex-row justify-between items-center px-8">
         <TouchableOpacity
           className="bg-white rounded-full p-2"
@@ -30,6 +70,7 @@ const ProfilePage = () => {
           <Settings size={30} color="#FFA1E7" fill="transparent" />
         </TouchableOpacity>
       </View>
+      {/* Profile Section */}
       <View className="flex-1 bg-secondary  justify-center px-5">
         <View className="flex items-center gap-y-5">
           <View>
@@ -45,19 +86,45 @@ const ProfilePage = () => {
             <Text className="text-grey text-xl text-center font-f200">#{userData.id.split('#')[1]}</Text>
           </View>
         </View>
-        <View>
-          <Text className="text-darkGrey text-2xl font-f200 py-5">Friend</Text>
-          <View className="gap-y-5">
-            <FriendCard />
-            {/* Search Bar */}
-            <TouchableOpacity
-              onPress={() => router.push('/(profile)/searchPage')}
-              className="flex-row w-full items-center bg-white rounded-2xl p-5 gap-x-5">
-              <Search size={30} color="#6c7278" fill="transparent" />
-              <Text className="text-darkGrey text-2xl font-f400">Find your friend</Text>
-            </TouchableOpacity>
+
+        {/* Friend Section */}
+        {friend && (
+          <View>
+            <Text className="text-darkGrey text-2xl font-f200 py-5">Friend</Text>
+            <View className="gap-y-5">
+              <FriendCard uid={userData.friend} />
+            </View>
           </View>
-        </View>
+        )}
+        
+        {/* Friend Requests Section */}
+        {!friend && !sentFriendRequest && (
+          <View>
+            <Text className="text-darkGrey text-2xl font-f200 py-5">Friend Requests</Text>
+            <View className="gap-y-5">
+              {friendRequests.map((request) => (
+                <FriendRequestCard
+                  key={request.uid}
+                  uid={request.uid}
+                  name={request.name}
+                  profilePicture={request.profilePicture}
+                  id={request.id}
+                />
+              ))}
+              <SearchCard />
+            </View>
+          </View>
+        )}
+
+        {/* Friend Request Sent Section */}
+        {sentFriendRequest && (
+          <View>
+            <Text className="text-darkGrey text-2xl font-f200 py-5">Sent Request</Text>
+            <View className="gap-y-5">
+              <FriendPendingCard uid={userData.friendPending} />
+            </View>
+          </View>
+        )}
         
         <TouchableOpacity 
           onPress={async () => {

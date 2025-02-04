@@ -20,9 +20,17 @@ const searchPage = () => {
             const querySnapshot = await getDocs(q)
 
             if(!querySnapshot.empty) {
-                const user = querySnapshot.docs[0].data()
-                setSearchResult(user)
-                console.log(user)
+                const userDoc = querySnapshot.docs[0];
+                const userData = userDoc.data();
+                
+                setSearchResult({
+                    ...userData,
+                    docUid: userDoc.id
+                })
+                console.log('Full user data with docUid:', {
+                    ...userData,
+                    docUid: userDoc.id
+                });
             } else {
                 setSearchResult(null)
                 console.log('User not found')
@@ -53,7 +61,14 @@ const searchPage = () => {
             default:
                 return (
                     <View className="flex items-center gap-y-5">
-                        <AddFriend friendProfile={searchResult.profilePicture} friendName={searchResult.name} friendId={searchResult.id} />
+                        <AddFriend 
+                            userProfile={searchResult.profilePicture} 
+                            uid={searchResult.docUid}
+                            userName={searchResult.name} 
+                            userId={searchResult.id} 
+                            userFriendRequests={searchResult.friendRequests || []}
+                            userFriend={searchResult.friend || null}
+                        />
                     </View>
                 )
         }
