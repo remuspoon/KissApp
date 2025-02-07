@@ -25,8 +25,11 @@ const searchPage = () => {
                 
                 setSearchResult({
                     ...userData,
-                    docUid: userDoc.id
-                })
+                    docUid: userDoc.id,
+                    profilePicture: userData.profilePicture === 'default' || !userData.profilePicture
+                                ? require('@/assets/icons/blankProfile.png')
+                                : userData.profilePicture
+                })  
                 console.log('Full user data with docUid:', {
                     ...userData,
                     docUid: userDoc.id

@@ -27,8 +27,10 @@ const FriendPendingCard = ({ uid }: FriendPendingCardProps) => {
                 const data = userDoc.data()
                 setFriendRequest({
                     name: data.name,
-                    profilePicture: data.profilePicture,
-                    id: data.id
+                    id: data.id,
+                    profilePicture: data.profilePicture === 'default' || !data.profilePicture
+                                ? require('@/assets/icons/blankProfile.png')
+                                : data.profilePicture
                 })
             }
         }

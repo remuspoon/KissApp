@@ -28,7 +28,9 @@ const FriendCard = ({uid}: FriendCardProps) => {
                 const data = userDoc.data()
                 setFriend({
                     name: data.name,
-                    profilePicture: data.profilePicture,
+                    profilePicture: data.profilePicture === 'default' || !data.profilePicture
+                                ? require('@/assets/icons/blankProfile.png')
+                                : data.profilePicture,
                     id: data.id
                 })
             }
