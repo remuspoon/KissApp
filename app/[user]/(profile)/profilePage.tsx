@@ -1,10 +1,10 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Modal, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
 import { signOut } from 'firebase/auth'
 import { FIREBASE_AUTH, FIREBASE_DB } from '@/firebase.config'
-import { Settings, ArrowLeft, Search } from 'lucide-react-native'
+import { Settings, ArrowLeft } from 'lucide-react-native'
 import { Image } from 'expo-image'
 import Placeholder from '@/assets/icons/blankProfile.png'
 import FriendCard from './(profile components)/friendCard'
@@ -12,10 +12,10 @@ import FriendRequestCard from './(profile components)/friendRequestCard'
 import SearchCard from './(profile components)/searchCard'
 import FriendPendingCard from './(profile components)/friendPendingCard'
 import { doc, getDoc } from 'firebase/firestore'
-
+import { getFunctions, httpsCallable } from 'firebase/functions'
+import { FIREBASE_APP } from '@/firebase.config'
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
-  console.log("Profile Page userData:", userData);
   const auth = FIREBASE_AUTH
   const [friendRequests, setFriendRequests] = useState<Array<{
     uid: string;
@@ -23,6 +23,7 @@ const ProfilePage = () => {
     profilePicture: string;
     id: string;
   }>>([])
+
 
   useEffect(() => {
     const fetchFriendRequests = async () => {
@@ -125,9 +126,7 @@ const ProfilePage = () => {
         {userData.friendPending && (
           <View>
             <Text className="text-darkGrey text-2xl font-f200 py-5">Sent Request</Text>
-            <View className="gap-y-5">
-              <FriendPendingCard uid={userData.friendPending} />
-            </View>
+            <FriendPendingCard uid={userData.friendPending} />
           </View>
         )}
         
