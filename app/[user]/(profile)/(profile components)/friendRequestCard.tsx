@@ -13,13 +13,12 @@ interface FriendRequestCardProps {
 }
 
 const FriendRequestCard = ({ uid, name, id, profilePicture }: FriendRequestCardProps) => {
-  const functions = getFunctions(FIREBASE_APP);
+  const functions = getFunctions(FIREBASE_APP, 'us-central1');
 
   const handleAccept = async () => {
     try {
       const acceptFriendRequest = httpsCallable(functions, "acceptFriendRequest");
-      const result = await acceptFriendRequest({ uid });
-      console.log(result)
+      await acceptFriendRequest({ uid });
     } catch (error) {
       console.error("Error accepting friend request:", error);
     }
@@ -28,10 +27,9 @@ const FriendRequestCard = ({ uid, name, id, profilePicture }: FriendRequestCardP
   const handleReject = async () => {
     try {
         const rejectFriendRequest = httpsCallable(functions, "rejectFriendRequest");
-        const result = await rejectFriendRequest({ uid });
-        console.log(result)
-    } catch (error) {
-        console.error("Error rejecting friend request", error)
+        await rejectFriendRequest({ uid });
+    } catch (error: any) {
+        console.error("Error rejecting friend request:", error);
     }
   }
   

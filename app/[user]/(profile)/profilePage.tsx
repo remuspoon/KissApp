@@ -15,13 +15,8 @@ import { doc, getDoc } from 'firebase/firestore'
 
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
+  console.log("Profile Page userData:", userData);
   const auth = FIREBASE_AUTH
-  const [friend, setFriend] = useState<boolean>(
-    Boolean(userData.friend)
-  )
-  const [sentFriendRequest, setSentFriendRequest] = useState<boolean>(
-    Boolean(userData.friendPending)
-  )
   const [friendRequests, setFriendRequests] = useState<Array<{
     uid: string;
     name: string;
@@ -31,24 +26,34 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchFriendRequests = async () => {
-      if (userData.friendRequests.length > 0) {
-        const requests = await Promise.all(
-          userData.friendRequests.map(async (uid) => {
-            const userDoc = await getDoc(doc(FIREBASE_DB, 'users', uid));
-            if (userDoc.exists()) {
-              const data = userDoc.data();
-              return {
-                uid: uid,
-                name: data.name,
-                id: data.id,
-                profilePicture: data.profilePicture
-              };
-            }
-            return null;
-          })
-        );
-        setFriendRequests(requests.filter(request => request !== null));
+      console.log("Fetching friend requests, current array:", userData.friendRequests);
+      
+      // Clear friendRequests state if there are no requests
+      if (!userData.friendRequests || userData.friendRequests.length === 0) {
+        console.log("No friend requests, clearing state");
+        setFriendRequests([]);
+        return;
       }
+
+      const requests = await Promise.all(
+        userData.friendRequests.map(async (uid) => {
+          const userDoc = await getDoc(doc(FIREBASE_DB, 'users', uid));
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            console.log("Fetched friend request data:", data);
+            return {
+              uid: uid,
+              name: data.name,
+              id: data.id,
+              profilePicture: data.profilePicture
+            };
+          }
+          return null;
+        })
+      );
+      const filteredRequests = requests.filter(request => request !== null);
+      console.log("Setting friend requests to:", filteredRequests);
+      setFriendRequests(filteredRequests);
     };
 
     fetchFriendRequests();
@@ -88,7 +93,7 @@ const ProfilePage = () => {
         </View>
 
         {/* Friend Section */}
-        {friend && (
+        {userData.friend && (
           <View>
             <Text className="text-darkGrey text-2xl font-f200 py-5">Friend</Text>
             <View className="gap-y-5">
@@ -98,7 +103,7 @@ const ProfilePage = () => {
         )}
         
         {/* Friend Requests Section */}
-        {!friend && !sentFriendRequest && (
+        {!userData.friend && !userData.friendPending && (
           <View>
             <Text className="text-darkGrey text-2xl font-f200 py-5">Friend Requests</Text>
             <View className="gap-y-5">
@@ -117,7 +122,7 @@ const ProfilePage = () => {
         )}
 
         {/* Friend Request Sent Section */}
-        {sentFriendRequest && (
+        {userData.friendPending && (
           <View>
             <Text className="text-darkGrey text-2xl font-f200 py-5">Sent Request</Text>
             <View className="gap-y-5">
