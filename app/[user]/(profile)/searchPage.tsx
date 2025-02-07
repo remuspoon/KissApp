@@ -1,11 +1,14 @@
 import { View, Text, SafeAreaView, ScrollView, KeyboardAvoidingView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { ArrowLeft, Search } from 'lucide-react-native'
 import { router } from 'expo-router'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { FIREBASE_DB } from '@/firebase.config'
 import AddFriend from './addFriend'
+import { UserContext } from '../userContext'
+
 const searchPage = () => {
+    const userData = useContext(UserContext)
     const [isLoading, setIsLoading] = useState(false)
     const [search, setSearch] = useState('')
     const [searchResult, setSearchResult] = useState<any>(null)
@@ -15,6 +18,11 @@ const searchPage = () => {
     const handleSearch = async () => {
         setIsLoading(true)
         try {
+            if (search.toLowerCase().trim() === userData.id.toLowerCase()) {
+                setSearchResult(null)
+                return
+            }
+            
             const usersRef = collection(FIREBASE_DB, 'users')
             const q = query(usersRef, where('id', '==', search.toLowerCase().trim()))
             const querySnapshot = await getDocs(q)
