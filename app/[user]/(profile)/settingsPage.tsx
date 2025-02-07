@@ -49,7 +49,6 @@ const SettingsPage = () => {
       })
 
       // Refresh user data
-      await userData.fetchUserData()
       router.back()
     } catch (error) {
       console.error('Error saving changes:', error)
@@ -75,9 +74,7 @@ const SettingsPage = () => {
   // Update the profile picture source to use newProfilePicture when available
   const displayPicture = newProfilePicture 
     ? { uri: newProfilePicture }
-    : (userData.profilePicture === 'default' || !userData.profilePicture
-        ? require('@/assets/icons/blankProfile.png')
-        : { uri: userData.profilePicture })
+    : require('@/assets/icons/blankProfile.png')
 
   return (
     <SafeAreaView className="flex-1 bg-secondary">

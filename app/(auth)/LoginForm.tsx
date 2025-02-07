@@ -11,14 +11,12 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false)
   const auth = FIREBASE_AUTH
   const router = useRouter()
-  const { fetchUserData } = useContext(UserContext)
 
   const SignIn = async () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password)
       console.log(response)
-      await fetchUserData()
       router.replace("/[user]/homePage")
     } catch (error: any) {
         console.log(error)

@@ -15,7 +15,6 @@ import { Image } from 'expo-image'
 
 const onBoarding = () => {
     const params = useLocalSearchParams();
-    const { fetchUserData } = React.useContext(UserContext)
     const [userData, setUserData] = React.useState<UserData>({
       name: (params.name as string) || '',
       birthday: new Date().toISOString().split('T')[0],
@@ -223,7 +222,6 @@ const onBoarding = () => {
                 friendPending: '',
                 friendRequests: []
             })
-            await fetchUserData()
             router.replace("/[user]/homePage")
         } catch (error: any) {
             setError(error.message)
