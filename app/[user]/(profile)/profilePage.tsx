@@ -14,6 +14,8 @@ import FriendPendingCard from './(profile components)/friendPendingCard'
 import { doc, getDoc } from 'firebase/firestore'
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { FIREBASE_APP } from '@/firebase.config'
+
+
 const ProfilePage = () => {
   const userData = React.useContext(UserContext)
   const auth = FIREBASE_AUTH
