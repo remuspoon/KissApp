@@ -30,6 +30,7 @@ const FriendPendingCard = ({ uid }: FriendPendingCardProps) => {
           const removePendingFriendRequest = httpsCallable(functions, "removePendingFriendRequest");
           await removePendingFriendRequest({ uid });
           setLoading(false)
+          setModalVisible(false)
         } catch (error) {
           console.error("Error removing pending friend request:", error);
           setLoading(false)
@@ -72,7 +73,8 @@ const FriendPendingCard = ({ uid }: FriendPendingCardProps) => {
               <View className="flex-row justify-center items-center gap-x-5">
                 <TouchableOpacity 
                   className="bg-primary py-2 rounded-lg p-5" 
-                  onPress={() => {removePendingFriendRequest(); setModalVisible(false)}}
+                  onPress={() => {removePendingFriendRequest()}}
+                  disabled={loading}
                 >
             {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text className="text-white text-xl text-center font-f600">Remove</Text>}
           </TouchableOpacity>

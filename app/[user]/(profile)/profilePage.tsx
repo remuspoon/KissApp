@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Modal, ActivityIndicator } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { UserContext } from '../userContext'
