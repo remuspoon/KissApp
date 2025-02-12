@@ -91,6 +91,7 @@ const SettingsPage = () => {
         {/* Profile */}
       <View className="flex-1 bg-secondary px-8">
         <View className="flex items-center gap-y-10">
+          <View className="flex items-center gap-y-2">
           <TouchableOpacity onPress={pickImage}>
             <Image 
               source={displayPicture}
@@ -98,6 +99,8 @@ const SettingsPage = () => {
               placeholder={Placeholder}
             />
           </TouchableOpacity>
+          <Text className="text-darkGrey font-f400 text-lg">Tap to change profile picture</Text>
+          </View>
           <View className="flex-row bg-white w-full p-5 rounded-2xl">
             <View className="flex gap-y-5 w-1/2">
               <Text className="text-darkGrey font-f600 text-xl border-b border-lightGrey pb-4">Name</Text>
@@ -121,9 +124,9 @@ const SettingsPage = () => {
             disabled={loading}
           >
             {loading ? (
-              <ActivityIndicator size="small" color="#ED40C5" />
+              <ActivityIndicator size="small" color="#FF8FEE" />
             ) : (
-              <Text className="text-accent text-center text-lg font-f600">Save Changes</Text>
+              <Text className="text-primary text-center text-lg font-f600">Save Changes</Text>
             )}
           </TouchableOpacity>
         </View>
